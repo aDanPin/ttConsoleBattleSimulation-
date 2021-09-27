@@ -16,10 +16,27 @@ public class Warrior
     public int Speed{get;}
     int speed;
 
-    Warrior(ArmyEnum a, int c, int i, int s) {
+    static int actualId = 0;
+    public int ID {get;}
+    int id;
+
+    public Warrior(ArmyEnum a, int c, int i, int s) {
+        id = actualId;
+        ++actualId;
+        
         army = a;
         cell = c;
         initiative = i;
         speed = s;
-    } 
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + ": " +
+            "ID: " + id.ToString() +
+            "Cell: " + cell.ToString() +
+            "Army: " + army.ToString() +
+            "Initiative: " + initiative.ToString() +
+            "Speed: " + speed.ToString();
+    }
 }
