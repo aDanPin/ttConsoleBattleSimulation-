@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class DeterminingPriority
 {
-    static bool IsFirstHavePriority(Warrior f, Warrior s, int round) {
+    public static bool IsFirstHavePriority(Warrior f, Warrior s, int round) {
         if(f.Initiative == s.Initiative) {
             if(f.Speed == s.Speed) {
                 if(f.Army == s.Army) {
@@ -21,5 +21,10 @@ public class DeterminingPriority
         } else { // f.Initiative != s.Initiative
             return f.Initiative > s.Initiative;
         }
+    }
+
+    public static int CompareWarriors(Warrior f, Warrior s) {
+        if(IsFirstHavePriority(f, s, RoundCount.Round)) return 1;
+        return -1;
     }
 }
