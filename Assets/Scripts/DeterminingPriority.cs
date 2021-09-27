@@ -29,7 +29,7 @@ public class DeterminingPriority : MonoBehaviour
 
     public static int CompareWarriors(Warrior f, Warrior s) {
         if(f.ID == s.ID) return 0;
-        if(IsFirstHavePriority(f, s, RoundCount.Round)) return 1;
-        return -1;
+        if(IsFirstHavePriority(f, s, RoundCount.Round)) return -1;
+        return 1;
     }
 }
