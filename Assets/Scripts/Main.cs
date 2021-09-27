@@ -6,8 +6,9 @@ public class Main : MonoBehaviour
 {
     private const int ITERATION_COUNT = 20;
 
-    int turn, firstWarrionId;
+    int turn;
     List<Warrior> battlefield;
+    HashSet<Warrior> goneInThisRound; 
 
     void Start()
     {
@@ -17,19 +18,25 @@ public class Main : MonoBehaviour
         Debug.Log("ROUND " + RoundCount.Round);
 
         turn = 0;
-        firstWarrionId = battlefield[0].ID;
+        goneInThisRound = new HashSet<Warrior>();
     }
 
     private void Update() {
         if(turn < ITERATION_COUNT & PlayStillContinues(battlefield)) {
-            Debug.Log("\n\n New turn");
-            if(battlefield[0].ID == firstWarrionId) { // Start new round
+            Debug.Log("\n");
+            Debug.Log("Turn " + turn);
+            if(goneInThisRound.Count == battlefield.Count) { // Start new round
                 RoundCount.Round++;
                 QueueMaker.SortQueue(battlefield);
-                firstWarrionId = battlefield[0].ID;
+
+                goneInThisRound.Clear();
 
                 Debug.Log("\n ROUND " + RoundCount.Round + "\n");
             } else {
+                if(!goneInThisRound.Contains(battlefield[0])) {
+                    goneInThisRound.Add(battlefield[0]);
+                }
+
                 if(battlefield[0].Army == battlefield[1].Army) {
                     // Pass turn
                     Debug.Log("Warrior " + battlefield[0] + " PASS TURN");
@@ -47,6 +54,8 @@ public class Main : MonoBehaviour
             foreach(Warrior w in battlefield) {
                 Debug.Log(w);
             }
+
+            turn++;
         }
         else {
             Debug.Log("End Game");
