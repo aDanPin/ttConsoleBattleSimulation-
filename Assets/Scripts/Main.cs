@@ -8,16 +8,25 @@ public class Main : MonoBehaviour
 
     void Start()
     {
-        main();    
+        main();
     }
 
     private void main() {
+
         List<Warrior> battlefield = InitialiseBattlefield();
+        //battlefield.Sort(DeterminingPriority.CompareWarriors);
         QueueMaker.SortQueue(battlefield);
 
+        
+        for(int i = 0; i < battlefield.Count; i++) {
+            Debug.Log(battlefield[i]);
+        }
+        
 
         Debug.Log("Round " + RoundCount.Round);
-        PlayGame(battlefield);
+        //PlayGame(battlefield);
+
+        PlayStillContinues(battlefield);
     }
 
     private List<Warrior> InitialiseBattlefield() {
@@ -32,13 +41,13 @@ public class Main : MonoBehaviour
         6 ячейка - К6 - Инициатива = 3, Скорость = 4
         7 ячейка - К7 - Инициатива = 1, Скорость = 1
         */
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 1, 8, 4));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 2, 8, 4));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 3, 9, 5));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 4, 4, 3));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 5, 2, 3));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 6, 3, 4));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Red, 7, 1, 1));
+        bf.Add(new Warrior(ArmyEnum.Red, 1, 8, 4));
+        bf.Add(new Warrior(ArmyEnum.Red, 2, 8, 4));
+        bf.Add(new Warrior(ArmyEnum.Red, 3, 9, 5));
+        bf.Add(new Warrior(ArmyEnum.Red, 4, 4, 3));
+        bf.Add(new Warrior(ArmyEnum.Red, 5, 2, 3));
+        bf.Add(new Warrior(ArmyEnum.Red, 6, 3, 4));
+        bf.Add(new Warrior(ArmyEnum.Red, 7, 1, 1));
 
         /*
         1 ячейка - С1 - Инициатива = 6, Скорость = 6
@@ -49,13 +58,13 @@ public class Main : MonoBehaviour
         6 ячейка - С6 - Инициатива = 4, Скорость = 2
         7 ячейка - С7 - Инициатива = 1, Скорость = 1
         */
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 1, 6 ,6));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 2, 8 ,5));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 3, 9 ,5));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 4, 8 ,4));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 5, 2 ,3));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 6, 4 ,2));
-        bf.Add(new Warrior(Warrior.ArmyEnum.Blue, 7, 1 ,1));
+        bf.Add(new Warrior(ArmyEnum.Blue, 1, 6 ,6));
+        bf.Add(new Warrior(ArmyEnum.Blue, 2, 8 ,5));
+        bf.Add(new Warrior(ArmyEnum.Blue, 3, 9 ,5));
+        bf.Add(new Warrior(ArmyEnum.Blue, 4, 8 ,4));
+        bf.Add(new Warrior(ArmyEnum.Blue, 5, 2 ,3));
+        bf.Add(new Warrior(ArmyEnum.Blue, 6, 4 ,2));
+        bf.Add(new Warrior(ArmyEnum.Blue, 7, 1 ,1));
 
         return bf;
     }
@@ -96,9 +105,10 @@ public class Main : MonoBehaviour
 
     private bool PlayStillContinues(List<Warrior> bf) {
         bool red = false, blue = false;
+
         foreach(Warrior w in bf) {
-            if(w.Army == Warrior.ArmyEnum.Red) red = true;
-            else blue = true;
+            if(w.Army == ArmyEnum.Red) red = true;
+            if(w.Army == ArmyEnum.Red) blue = true;
         }
 
         return red & blue;
