@@ -6,31 +6,56 @@ public class Main : MonoBehaviour
 {
     private const int ITERATION_COUNT = 20;
 
+    int turn, firstWarrionId;
+    List<Warrior> battlefield;
+
     void Start()
     {
-        main();
+        battlefield = InitialiseBattlefield();
+        QueueMaker.SortQueue(battlefield);
+        
+        Debug.Log("ROUND " + RoundCount.Round);
+
+        turn = 0;
+        firstWarrionId = battlefield[0].ID;
     }
 
-    private void main() {
+    private void Update() {
+        if(turn < ITERATION_COUNT & PlayStillContinues(battlefield)) {
+            Debug.Log("\n\n New turn");
+            if(battlefield[0].ID == firstWarrionId) { // Start new round
+                RoundCount.Round++;
+                QueueMaker.SortQueue(battlefield);
+                firstWarrionId = battlefield[0].ID;
 
-        List<Warrior> battlefield = InitialiseBattlefield();
-        //battlefield.Sort(DeterminingPriority.CompareWarriors);
-        QueueMaker.SortQueue(battlefield);
+                Debug.Log("\n ROUND " + RoundCount.Round + "\n");
+            } else {
+                if(battlefield[0].Army == battlefield[1].Army) {
+                    // Pass turn
+                    Debug.Log("Warrior " + battlefield[0] + " PASS TURN");
+                    var w = battlefield[0];
+                    battlefield.Remove(battlefield[0]);
+                    battlefield.Add(w);
+                } else {
+                    // Kill warrior
+                    Debug.Log("Warrior " + battlefield[0] + "  KILL  " + battlefield[1]);
+                    battlefield.Remove(battlefield[1]);
+                }
+            }
 
-        
-        for(int i = 0; i < battlefield.Count; i++) {
-            Debug.Log(battlefield[i]);
+            Debug.Log("Actual battlefield ");
+            foreach(Warrior w in battlefield) {
+                Debug.Log(w);
+            }
         }
-        
-
-        Debug.Log("Round " + RoundCount.Round);
-        //PlayGame(battlefield);
-
-        PlayStillContinues(battlefield);
+        else {
+            Debug.Log("End Game");
+            enabled = false;
+        }
     }
 
     private List<Warrior> InitialiseBattlefield() {
-        List<Warrior> bf = new List<Warrior>();
+        List<Warrior> battlefield = new List<Warrior>();
 
         /*
         1 ячейка - К1 - Инициатива = 8, Скорость = 4
@@ -41,13 +66,13 @@ public class Main : MonoBehaviour
         6 ячейка - К6 - Инициатива = 3, Скорость = 4
         7 ячейка - К7 - Инициатива = 1, Скорость = 1
         */
-        bf.Add(new Warrior(ArmyEnum.Red, 1, 8, 4));
-        bf.Add(new Warrior(ArmyEnum.Red, 2, 8, 4));
-        bf.Add(new Warrior(ArmyEnum.Red, 3, 9, 5));
-        bf.Add(new Warrior(ArmyEnum.Red, 4, 4, 3));
-        bf.Add(new Warrior(ArmyEnum.Red, 5, 2, 3));
-        bf.Add(new Warrior(ArmyEnum.Red, 6, 3, 4));
-        bf.Add(new Warrior(ArmyEnum.Red, 7, 1, 1));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 1, 8, 4));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 2, 8, 4));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 3, 9, 5));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 4, 4, 3));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 5, 2, 3));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 6, 3, 4));
+        battlefield.Add(new Warrior(ArmyEnum.Red, 7, 1, 1));
 
         /*
         1 ячейка - С1 - Инициатива = 6, Скорость = 6
@@ -58,55 +83,21 @@ public class Main : MonoBehaviour
         6 ячейка - С6 - Инициатива = 4, Скорость = 2
         7 ячейка - С7 - Инициатива = 1, Скорость = 1
         */
-        bf.Add(new Warrior(ArmyEnum.Blue, 1, 6 ,6));
-        bf.Add(new Warrior(ArmyEnum.Blue, 2, 8 ,5));
-        bf.Add(new Warrior(ArmyEnum.Blue, 3, 9 ,5));
-        bf.Add(new Warrior(ArmyEnum.Blue, 4, 8 ,4));
-        bf.Add(new Warrior(ArmyEnum.Blue, 5, 2 ,3));
-        bf.Add(new Warrior(ArmyEnum.Blue, 6, 4 ,2));
-        bf.Add(new Warrior(ArmyEnum.Blue, 7, 1 ,1));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 1, 6 ,6));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 2, 8 ,5));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 3, 9 ,5));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 4, 8 ,4));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 5, 2 ,3));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 6, 4 ,2));
+        battlefield.Add(new Warrior(ArmyEnum.Blue, 7, 1 ,1));
 
-        return bf;
+        return battlefield;
     }
 
-    private void PlayGame(List<Warrior> bf) {
-        int turn = 0;
-        int firstWarrionId = bf[0].ID;
-
-        while(turn < ITERATION_COUNT & PlayStillContinues(bf)) {
-            if(bf[0].ID == firstWarrionId) { // Start new round
-                RoundCount.Round++;
-                QueueMaker.SortQueue(bf);
-                firstWarrionId = bf[0].ID;
-
-                Debug.Log("Round " + RoundCount.Round);
-            } else {
-                if(bf[0].Army == bf[1].Army) {
-                    // Pass turn
-                    Debug.Log("Warrior " + bf[0] + " pass turn");
-                    var w = bf[0];
-                    bf.Remove(bf[0]);
-                    bf.Add(w);
-                } else {
-                    // Kill warrior
-                    bf.Remove(bf[1]);
-                    Debug.Log("Warrior " + bf[0] + " kill " + bf[1]);
-                }
-            }
-
-            Debug.Log("Actual battlefield ");
-            foreach(Warrior w in bf) {
-                Debug.Log(w);
-            }
-            Debug.Log(" ");
-        }
-        Debug.Log("End Game");
-    }
-
-    private bool PlayStillContinues(List<Warrior> bf) {
+    private bool PlayStillContinues(List<Warrior> battlefield) {
         bool red = false, blue = false;
 
-        foreach(Warrior w in bf) {
+        foreach(Warrior w in battlefield) {
             if(w.Army == ArmyEnum.Red) red = true;
             if(w.Army == ArmyEnum.Red) blue = true;
         }

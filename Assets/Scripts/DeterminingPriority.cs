@@ -17,12 +17,9 @@ public class DeterminingPriority : MonoBehaviour
                     }
                 }
             } else { // f.Speed != s.Speed
-            Debug.Log(2);
-                
                 return f.Speed > s.Speed;
             }
         } else { // f.Initiative != s.Initiative
-            Debug.Log(1);
             return f.Initiative > s.Initiative;
         }
     }
